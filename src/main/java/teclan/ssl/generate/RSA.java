@@ -1,34 +1,58 @@
 package teclan.ssl.generate;
 
+import java.security.Key;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+
+import teclan.ssl.generate.base64.BASE64Encoder;
+
 public class RSA {
-	private String pubKey;
-	private String priKey;
+	
+	private PublicKey publicKey ;
+	private PrivateKey privateKey;
 	
 	public RSA(){
 		
 	}
 	
-	public RSA(String pubKey,String priKey){
-		this.pubKey=pubKey;
-		this.priKey=priKey;
+public RSA(PublicKey publicKey,PrivateKey privateKey){
+	this.publicKey=publicKey;
+	this.privateKey=privateKey;
+		
 	}
 
-	public String getPubKey() {
-		return pubKey;
-	}
-
-	public void setPubKey(String pubKey) {
-		this.pubKey = pubKey;
-	}
-
-	public String getPriKey() {
-		return priKey;
-	}
-
-	public void setPriKey(String priKey) {
-		this.priKey = priKey;
+	public PublicKey getPublicKey() {
+		return publicKey;
 	}
 	
+	public String getPublicKeyString() throws Exception {
+		return getKeyString(publicKey);
+	}
+
+	public void setPublicKey(PublicKey publicKey) {
+		this.publicKey = publicKey;
+	}
+
+	public PrivateKey getPrivateKey() {
+		return privateKey;
+	}
+	public String getPrivateKeyString() throws Exception {
+		return getKeyString(privateKey);
+	}
+	public void setPrivateKey(PrivateKey privateKey) {
+		this.privateKey = privateKey;
+	}
 	
+	/**
+	 * 得到密钥字符串（经过base64编码）
+	 * 
+	 * @return
+	 */
+	public   String getKeyString(Key key) throws Exception {
+		byte[] keyBytes = key.getEncoded();
+		String s = (new BASE64Encoder()).encode(keyBytes);
+		return s;
+	}
+
 
 }
