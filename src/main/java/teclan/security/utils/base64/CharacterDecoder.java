@@ -1,4 +1,4 @@
-package teclan.ssl.generate.base64;
+package teclan.security.utils.base64;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

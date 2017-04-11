@@ -1,9 +1,9 @@
-package teclan.ssl.example;
+package teclan.security.ssl.example;
 
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import teclan.ssl.SSLServer;
+import teclan.security.ssl.SSLServer;
 
 @Singleton
 public class SSLServerProvider implements Provider<SSLServer> {

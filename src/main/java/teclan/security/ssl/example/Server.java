@@ -1,4 +1,4 @@
-package teclan.ssl.example;
+package teclan.security.ssl.example;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,17 +6,15 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import teclan.ssl.SSLClient;
+import teclan.security.ssl.SSLServer;
 
-public class Client {
+public class Server {
     private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
     public static void main(String[] args) {
-        Injector injector = Guice.createInjector(new SSLCilentModule());
-
+        Injector injector = Guice.createInjector(new SSLServerModule());
         try {
-            injector.getInstance(SSLClient.class).certificate("localhost");
-
+            injector.getInstance(SSLServer.class).init();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }

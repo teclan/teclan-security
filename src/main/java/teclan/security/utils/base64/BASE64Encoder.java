@@ -1,4 +1,4 @@
-package teclan.ssl.generate.base64;
+package teclan.security.utils.base64;
 
 import java.io.IOException;
 import java.io.OutputStream;

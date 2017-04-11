@@ -1,4 +1,4 @@
-package teclan.ssl.generate;
+package teclan.security.rsa;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -27,8 +27,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import teclan.ssl.generate.base64.BASE64Decoder;
-import teclan.ssl.generate.base64.BASE64Encoder;
+
+import teclan.security.utils.base64.BASE64Decoder;
+import teclan.security.utils.base64.BASE64Encoder;
 
 public class RSAUtils {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RSAUtils.class);

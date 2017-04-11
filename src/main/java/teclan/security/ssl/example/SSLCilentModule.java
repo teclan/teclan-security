@@ -1,8 +1,8 @@
-package teclan.ssl.example;
+package teclan.security.ssl.example;
 
 import com.google.inject.AbstractModule;
 
-import teclan.ssl.SSLClient;
+import teclan.security.ssl.SSLClient;
 
 public class SSLCilentModule extends AbstractModule {
 

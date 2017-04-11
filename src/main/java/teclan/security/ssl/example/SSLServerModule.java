@@ -1,8 +1,8 @@
-package teclan.ssl.example;
+package teclan.security.ssl.example;
 
 import com.google.inject.AbstractModule;
 
-import teclan.ssl.SSLServer;
+import teclan.security.ssl.SSLServer;
 
 public class SSLServerModule extends AbstractModule {
     @Override

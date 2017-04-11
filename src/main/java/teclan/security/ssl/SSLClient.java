@@ -1,4 +1,4 @@
-package teclan.ssl;
+package teclan.security.ssl;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,7 +17,7 @@ import javax.net.ssl.TrustManagerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import teclan.ssl.exception.CertificateException;
+import teclan.security.ssl.exception.CertificateException;
 
 public class SSLClient {
     private static final Logger LOGGER = LoggerFactory

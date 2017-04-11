@@ -1,9 +1,12 @@
-package teclan.ssl.generate;
+package teclan.security.rsa;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import teclan.security.rsa.RSA;
+import teclan.security.rsa.RSAUtils;
 
 public class RSATest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RSATest.class);

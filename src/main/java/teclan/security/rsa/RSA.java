@@ -1,10 +1,10 @@
-package teclan.ssl.generate;
+package teclan.security.rsa;
 
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
-import teclan.ssl.generate.base64.BASE64Encoder;
+import teclan.security.utils.base64.BASE64Encoder;
 
 public class RSA {
 	

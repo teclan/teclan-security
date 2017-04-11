@@ -1,4 +1,4 @@
-package teclan.ssl.exception;
+package teclan.security.ssl.exception;
 
 public class CertificateException extends Exception {
 
