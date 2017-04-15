@@ -11,6 +11,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>teclan.utils</groupId>
+			<artifactId>teclan-utils</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
 			<version>4.1.0</version>
