@@ -1,10 +1,8 @@
 package teclan.security.rsa;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 
-import teclan.utils.GsonUtils;
-
+import com.google.gson.annotations.SerializedName;
 /**
  * 
 一般的数字证书产品的主题通常含有如下字段：
@@ -26,40 +24,89 @@ import teclan.utils.GsonUtils;
  *
  */
 
-@JsonIgnoreProperties("CER")
 public class Certificate {
-	
-	public String version; // 证书版本号
-	public String algorithm; // 签名算法 如：RSA
-	public String serial; // 证书序列号，由颁发机构生成
-	@JsonProperty("DN")
-	public String distributedAuthority;//DN 证书颁发者的可识别名
-	// 有效期—证书有效期的时间段。本字段由”Not Before”和”Not After”两项组成，
-	// 它们分别由UTC时间或一般的时间表示（在RFC2459中有详细的时间表示规则）
+	/**
+	 * 证书版本号
+	 */
+	public String version; 
+	/**
+	 * 签名算法 如：RSA
+	 */
+	public String algorithm = "RSA";  
+	/**
+	 * 证书序列号，由颁发机构生成
+	 */
+	public String serial="SSL"+new Date().getTime(); // 证书序列号，由颁发机构生成
+	/**
+	 * DN 证书颁发者的可识别名
+	 */
+	@SerializedName("DN") 
+	public String distributedAuthority; 
+	 
+	/**
+	 *  有效期—证书有效期的时间段。本字段由”Not Before”和”Not After”两项组成，
+	 *   它们分别由UTC时间或一般的时间表示（在RFC2459中有详细的时间表示规则）
+	 */
 	public String notBefore; 
+	/**
+	 *  有效期—证书有效期的时间段。本字段由”Not Before”和”Not After”两项组成，
+	 *   它们分别由UTC时间或一般的时间表示（在RFC2459中有详细的时间表示规则）
+	 */
 	public String notAfter;
-	@JsonProperty("CN")
-	public String commonName; //CN 公用名称
-	@JsonProperty("ON")
-	public String organizationUnit; //ON 单位名称
-	@JsonProperty("L")
-	public String locality; // L 所在城市
-	@JsonProperty("S")
-	public String state; // S 所在省份 (State/Provice)
-	public String country; // C 所在国家，国家字母缩写
+	/**
+	 * CN 公用名称
+	 */
+	@SerializedName("CN")
+	public String commonName;  
+	
+	/**
+	 * O 单位名称，对于 SSL 证书，一般为网站域名；而对于代码签名证书则为申请单位名称；而对于客户端单位证书则为证书申请者所在单位名称； 
+     * 证书申请单位所在地
+	 */
+	@SerializedName("OU")
+	public String organizationUnit;  
+	
+	/**
+	 * L 所在城市
+	 */
+	@SerializedName("L")
+	public String locality; 
+	/**
+	 * S 所在省份 (State/Provice)
+	 */
+	@SerializedName("S")
+	public String state;  
+	
+	/**
+	 *  C 所在国家，国家字母缩写
+	 */
+	@SerializedName("C")
+	public String country; 
+	/**
+	 *  邮件
+	 */
+	@SerializedName("E")
 	public String email; 
+	/**
+	 *  电话
+	 */
 	public String phone;
-	public String stree; //街道
-	public String postalCode;// 邮政编码
+	/**
+	 * 街道
+	 */
+	@SerializedName("ST")
+	public String stree;
+	/**
+	 * 邮政编码
+	 */
+	public String postalCode;
+	/**
+	 * 描述
+	 */
 	public String description;
 	
-	public static void main(String[] args) {
-		Certificate certificate = new Certificate();
-		certificate.distributedAuthority="Teclan";
-		certificate.commonName="teclan";
-		certificate.country="ZN";
-		
-		System.out.println(GsonUtils.toJson(certificate));
+	public String getDesForKey(){
+		return String.format("CN=%s,OU=%s,L=%s,S=%s,C=%s,ST=%s", 
+				commonName,organizationUnit,locality,state,country,stree);
 	}
-
 }
