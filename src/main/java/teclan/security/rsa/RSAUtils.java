@@ -30,9 +30,16 @@ import org.slf4j.LoggerFactory;
 
 import teclan.security.utils.base64.BASE64Decoder;
 import teclan.security.utils.base64.BASE64Encoder;
+import teclan.utils.FileUtils;
 
 public class RSAUtils {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RSAUtils.class);
+	
+	private static final String DEFAULT_PUB_KEY="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCLcuZKy/LnODIA03JE+KTOoXq6TCIGVkUw6BOiJQ0v871VXW5GsqHf0AODf4qpblAkzMPURGOx3iwr53Xe37o11GS4kbwg08FModUXcr4kA+kYQEXlWgh+fs3kgcuzvwlZMogANu7LxUz+0PFgL+NaiNmZgU4LNq76r3bLYXd6lQIDAQAB";
+	private static final String DEFAULT_PRI_KEY= "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAIty5krL8uc4MgDTckT4pM6herpMIgZWRTDoE6IlDS/zvVVdbkayod/QA4N/iqluUCTMw9REY7HeLCvndd7fujXUZLiRvCDTwUyh1RdyviQD6RhAReVaCH5+zeSBy7O/CVkyiAA27svFTP7Q8WAv41qI2ZmBTgs2rvqvdsthd3qVAgMBAAECgYBynhdRhT7688KN0T5MGH8F485HUAprYP9wCmEQ1hl3v4RwpOHeNDc/Ce/JZsynJKe1B6UyVKAI848k6xOEBCo9j7wuGajAQO0pzhtMxPLFr/7AayE+Ax4h+k4UrgVbuuaB3crwQsw+Hcol8GVXBWUnnWdrQy+GKP69ppfMRzzQ5QJBAPm0a8Q6ERyR3I+QsTFSrDKbqzx9Bqdgy53S+8W1iDE1l2b3l0oQSEXeyVrokq0YrFEUVjLZ0MM/3l907ep0AMsCQQCO9uTEingIhXyhe0zfHh08sP4LtWYB/xiEbkKz6Ybe+8rv/N6znmwun5fA2c8BInjwtjpOpScyP/ytvNYgf+YfAkEA9r+D0ncy25GDa1am0j+Iq8XKM0602Yc8Diwj4V4eQ8paX0SAeo6WbHzXan7yGhyMgt5ew4cb1STy4E8SnyCcewJAFDuW1sXuBO63W7cyguUlKCC4Y3nRrPioRJ3CLOog30/tQZedAPirwNFvTajFphh120M+70BqUq9BmGkAOOtA6wJAYwlehf7MHNQNMTIHyfnOKeXyU0R3oVkRut3aUxEQCEyAV52dgw/zPbqPcMw77U+emK1h1AsoZhAAopwDcleUQg==";
+	
+	public static String PUB_KEY = DEFAULT_PUB_KEY;
+	public static String PRI_KEY=DEFAULT_PRI_KEY;
 
 	private static Cipher cipher;
 
@@ -79,21 +86,25 @@ public class RSAUtils {
 			// 得到私钥字符串
 			String privateKeyString = getKeyString(privateKey);
 			// 将密钥对写入到文件
-
-			String pubKeyFile = filePath == null ? "publicKey.keystore" : filePath + "/publicKey.keystore";
-			String priKeyFile = filePath == null ? "privateKey.keystore" : filePath + "/privateKey.keystore";
-			FileWriter pubfw = new FileWriter(pubKeyFile);
-			FileWriter prifw = new FileWriter(priKeyFile);
-			BufferedWriter pubbw = new BufferedWriter(pubfw);
-			BufferedWriter pribw = new BufferedWriter(prifw);
-			pubbw.write(publicKeyString);
-			pribw.write(privateKeyString);
-			pubbw.flush();
-			pubbw.close();
-			pubfw.close();
-			pribw.flush();
-			pribw.close();
-			prifw.close();
+			
+			if(filePath!=null){
+			    String pubKeyFile =  filePath + "/publicKey.keystore";
+	            String priKeyFile =  filePath + "/privateKey.keystore";
+	            FileUtils.creatIfNeed(pubKeyFile);
+	            FileUtils.creatIfNeed(priKeyFile);
+	            FileWriter pubfw = new FileWriter(pubKeyFile);
+	            FileWriter prifw = new FileWriter(priKeyFile);
+	            BufferedWriter pubbw = new BufferedWriter(pubfw);
+	            BufferedWriter pribw = new BufferedWriter(prifw);
+	            pubbw.write(publicKeyString);
+	            pribw.write(privateKeyString);
+	            pubbw.flush();
+	            pubbw.close();
+	            pubfw.close();
+	            pribw.flush();
+	            pribw.close();
+	            prifw.close();
+			}
 			
 			RSA rsa = new RSA(publicKey, privateKey);
 
@@ -111,13 +122,18 @@ public class RSAUtils {
 	 *            密钥字符串（经过base64编码）
 	 * @throws Exception
 	 */
-	public static PublicKey getPublicKey(String key) throws Exception {
+	public static PublicKey getPublicKey(String key)  {
 		byte[] keyBytes;
+		try{
 		keyBytes = (new BASE64Decoder()).decodeBuffer(key);
 		X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
 		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 		PublicKey publicKey = keyFactory.generatePublic(keySpec);
 		return publicKey;
+		}catch(Exception e){
+		    LOGGER.error(e.getMessage(),e);
+		    return null;
+		}
 	}
 
 	/**
@@ -127,13 +143,18 @@ public class RSAUtils {
 	 *            密钥字符串（经过base64编码）
 	 * @throws Exception
 	 */
-	public static PrivateKey getPrivateKey(String key) throws Exception {
+	public static PrivateKey getPrivateKey(String key)  {
 		byte[] keyBytes;
+		try{
 		keyBytes = (new BASE64Decoder()).decodeBuffer(key);
 		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
 		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 		PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
 		return privateKey;
+		}catch(Exception e){
+		    LOGGER.error(e.getMessage(),e);
+		    return null;
+		}
 	}
 
 	/**
@@ -471,6 +492,38 @@ public class RSAUtils {
        // return Base64.byteArrayToBase64(rsaBytes); 
     }
     
+    public static String sign(String plainText)  
+            throws Exception  {  
+        /* 
+         * MD5加密 
+         */  
+        MessageDigest md5 = MessageDigest.getInstance("MD5");  
+        md5.update(plainText.getBytes("utf-8"));  
+        byte[] digestBytes = md5.digest();  
+        /* 
+         * 用私钥进行签名 RSA 
+         * Cipher负责完成加密或解密工作，基于RSA 
+         */  
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");  
+        //ENCRYPT_MODE表示为加密模式  
+        
+        
+        cipher.init(Cipher.ENCRYPT_MODE, getPrivateKey(PRI_KEY));  
+        //加密  
+        byte[] rsaBytes = cipher.doFinal(digestBytes);  
+        //Base64编码  
+     return   new BASE64Encoder().encode(rsaBytes);
+       // return Base64.byteArrayToBase64(rsaBytes); 
+    }
+    
+    /**
+     * 验证签名
+     * @param message 要验证的消息
+     * @param cipherText 签名信息
+     * @param publicKey 公钥
+     * @return
+     * @throws Exception
+     */
     public static boolean verify(String message, String cipherText,PublicKey publicKey) throws Exception {  
         Cipher c4 = Cipher.getInstance("RSA/ECB/PKCS1Padding");  
         // 根据密钥，对Cipher对象进行初始化,DECRYPT_MODE表示解密模式  
@@ -492,5 +545,37 @@ public class RSAUtils {
             return false;  
         }  
     }  
+    
+    /**
+     * 验证签名
+     * @param message 要验证的消息
+     * @param cipherText 签名信息
+     * @param publicKey 公钥
+     * @return
+     * @throws Exception
+     */
+    public static boolean verify(String message, String cipherText) throws Exception {  
+        Cipher c4 = Cipher.getInstance("RSA/ECB/PKCS1Padding");  
+        // 根据密钥，对Cipher对象进行初始化,DECRYPT_MODE表示解密模式  
+        c4.init(Cipher.DECRYPT_MODE, getPublicKey(PUB_KEY));  
+        // 解密  
+//        byte[] desDecTextBytes = c4.doFinal(Base64.base64ToByteArray(cipherText));  
+        byte[] desDecTextBytes = c4.doFinal( new BASE64Decoder().decodeBuffer(cipherText));  
+        // 得到前置对原文进行的MD5  
+        String md5Digest1 =  new BASE64Encoder().encode(desDecTextBytes); //;Base64.byteArrayToBase64(desDecTextBytes);  
+        MessageDigest md5 = MessageDigest.getInstance("MD5");  
+        md5.update(message.getBytes("utf-8"));  
+        byte[] digestBytes = md5.digest();  
+        // 得到商户对原文进行的MD5  
+        String md5Digest2 = new BASE64Encoder().encode(digestBytes);//Base64.byteArrayToBase64(digestBytes);  
+        // 验证签名  
+        if (md5Digest1.equals(md5Digest2)) {  
+            return true;  
+        } else {  
+            return false;  
+        }  
+    }  
+    
+    
 	
 }

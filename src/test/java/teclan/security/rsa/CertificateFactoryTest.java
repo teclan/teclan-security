@@ -4,8 +4,6 @@ import org.junit.Test;
 
 public class CertificateFactoryTest {
 	
-	
-	// 必须以root权限执行
 	@Test
 	public void generateTest(){
 		Certificate certificate = new Certificate();
@@ -15,7 +13,13 @@ public class CertificateFactoryTest {
 		
 		CertificateFactory factory = new CertificateFactory();
 		
-		factory.generateByKeyTool(certificate, "/home/teclan/1.keystore", "1.p12","123456");
+		RSA rsa = RSAUtils.generateKeyPair();
+		
+		certificate.publicKey = rsa.getPublicKeyString();
+		certificate.privateKey = rsa.getPrivateKeyString();
+		
+		factory.generateCert(certificate, "teclan.cert.xml");
+		
 		
 	}
 
